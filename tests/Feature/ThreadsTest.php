@@ -2,20 +2,26 @@
 
 namespace Tests\Feature;
 
+use App\Thread;
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class ThreadsTest extends TestCase
 {
+    use DatabaseMigrations;
     /**
-     * A basic test example.
-     *
-     * @return void
+     * @test
      */
-    public function testBasicTest()
+    public function aUserCanBrowseThreads()
     {
-        $response = $this->get('/');
+        $thread = factory(Thread::class)->create();
 
-        $response->assertStatus(200);
+        $this->get('/threads')
+            ->assertSee($thread->title)
+            ->assertSee($thread->body);
+
+        $this->get('/threads/' . $thread->id)
+            ->assertSee($thread->title)
+            ->assertSee($thread->body);
     }
 }
