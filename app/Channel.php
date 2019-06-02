@@ -4,6 +4,7 @@ namespace App;
 
 use App\Channel;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Channel extends Model
 {
@@ -17,10 +18,22 @@ class Channel extends Model
     ];
 
     /**
-     * Get all the threads that belong to a channel
+     * Get the route key name for Laravel.
+     *
+     * @return string
      */
-    public function thread()
+    public function getRouteKeyName()
     {
-        return $this->hasMany(Channel::class);
+        return 'slug';
+    }
+
+    /**
+     * A channel consists of threads.
+     *
+     * @return HasMany
+     */
+    public function threads()
+    {
+        return $this->hasMany(Thread::class);
     }
 }
