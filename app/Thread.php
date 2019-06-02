@@ -32,4 +32,12 @@ class Thread extends Model
     {
         return $this->hasMany(Reply::class);
     }
+
+    /**
+     * Return the path to a single thread
+     */
+    public function path()
+    {
+        return '/threads/' . $this->id;
+    }
 }
