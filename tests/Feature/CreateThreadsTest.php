@@ -2,7 +2,6 @@
 
 namespace Tests\Feature;
 
-use App\User;
 use App\Thread;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
@@ -17,19 +16,8 @@ class CreateThreadsTest extends TestCase
      */
     public function unAuthenticatedUsersCannotCreateNewThreads()
     {
-        $this->expectException('Illuminate\Auth\AuthenticationException');
-
-        $this->post('/threads', []);
-    }
-
-    /**
-     * Test whether unauthenticated users can see the create threads page
-     * @test
-     */
-    public function unAuthenticatedUsersCannotSeeThreadsPage()
-    {
         $this->withExceptionHandling()
-            ->get('/threads/create')
+            ->post('/threads', [])
             ->assertRedirect('/login');
     }
     
