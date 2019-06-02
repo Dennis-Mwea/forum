@@ -34,6 +34,7 @@
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
                         <a class="nav-link" href="/threads">All threads</a>
+                        <a href="/threads/create" class="nav-link">New Thread</a>
 
                         <li class="nav-item dropdown">
                             <a href="#" id="channelDropDown" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
