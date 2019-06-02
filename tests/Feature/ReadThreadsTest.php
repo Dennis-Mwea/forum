@@ -22,7 +22,7 @@ class ReadThreadsTest extends TestCase
     {
         parent::setUp();
 
-        $this->thread = factory(Thread::class)->create();
+        $this->thread = create(Thread::class);
     }
 
     /**
@@ -53,8 +53,8 @@ class ReadThreadsTest extends TestCase
      */
     public function aUserCanReadThreadsAssociatedWithAThread()
     {
-        $reply = factory(Reply::class)->create(['thread_id' => $this->thread->id]);
-
+        $reply = create('App\Reply', ['thread_id' => $this->thread->id]);
+        
         $this->get($this->thread->path())
             ->assertSee($reply->body);
     }
