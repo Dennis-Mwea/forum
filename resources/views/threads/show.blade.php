@@ -21,21 +21,7 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             @foreach ($thread->replies as $reply)
-                <div class="card mt-10 replies">
-                    <div class="card-header">
-                        <a href="#">
-                            {{ $reply->user->name }}
-                        </a> said {{ $reply->created_at->diffForHumans() }}:
-                    </div>
-
-                    <div class="card-body">
-                        <article>
-                            <div class="body">
-                                {{ $reply->body }}
-                            </div>
-                        </article>
-                    </div>
-                </div>
+                @include('threads.replies')
             @endforeach
         </div>
     </div>
