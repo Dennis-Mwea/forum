@@ -19,15 +19,22 @@ class ParticipateInForumTest extends TestCase
      */
     protected $thread;
 
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        $this->thread = create(Thread::class);
+    }
+
     /**
      * Test whether unauthenticated users add a reply to a thread
      * @test
      */
     public function unauthenticatedUsersMayNotParticipateInTheForum()
     {
-        $this->expectException('Illuminate\Auth\AuthenticationException');
-
-        $this->post('/threads/1/replies', []);
+        $this->withExceptionHandling()
+            ->post($this->thread->path() . '/replies', [])
+            ->assertRedirect('/login');
     }
 
     /**
@@ -38,12 +45,11 @@ class ParticipateInForumTest extends TestCase
     {
         $this->signIn();
 
-        $thread = create(Thread::class);
         $reply = make(Reply::class);
 
-        $this->post($thread->path() . '/replies', $reply->toArray());
+        $this->post($this->thread->path() . '/replies', $reply->toArray());
 
-        $this->get($thread->path())
+        $this->get($this->thread->path())
             ->assertSee($reply->body);
     }
 }

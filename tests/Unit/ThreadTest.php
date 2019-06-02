@@ -4,6 +4,7 @@ namespace Tests\Unit;
 
 use App\User;
 use App\Thread;
+use App\Channel;
 use Tests\TestCase;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
@@ -55,5 +56,23 @@ class ThreadTest extends TestCase
         ]);
 
         $this->assertCount(1, $this->thread->replies);
+    }
+
+    /**
+     * Test whether a thread is associated with a channel
+     * @test
+     */
+    public function aThreadBelongsToAChannel()
+    {
+        $this->assertInstanceOf(Channel::class, $this->thread->channel);
+    }
+
+    /**
+     * Test the path to a single thread
+     * @test
+     */
+    public function aThreadCanMakeAStringPath()
+    {
+        $this->assertEquals("/threads/{$this->thread->channel->slug}/{$this->thread->id}", $this->thread->path());
     }
 }
