@@ -21,6 +21,17 @@ class CreateThreadsTest extends TestCase
 
         $this->post('/threads', []);
     }
+
+    /**
+     * Test whether unauthenticated users can see the create threads page
+     * @test
+     */
+    public function unAuthenticatedUsersCannotSeeThreadsPage()
+    {
+        $this->withExceptionHandling()
+            ->get('/threads/create')
+            ->assertRedirect('/login');
+    }
     
     /**
      * Test whether authenticated users can create threads
