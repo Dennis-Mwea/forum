@@ -52,4 +52,18 @@ class ParticipateInForumTest extends TestCase
         $this->get($this->thread->path())
             ->assertSee($reply->body);
     }
+
+    /**
+     * Test whether a reply's body is valie
+     * @test
+     */
+    public function aReplyRequiresABody()
+    {
+        $this->withExceptionHandling()->signIn();
+
+        $reply = make(Reply::class, ['body' => null]);
+
+        $this->post($this->thread->path() . '/replies', $reply->toArray())
+            ->assertSessionHasErrors('body');
+    }
 }
