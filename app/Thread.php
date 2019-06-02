@@ -4,6 +4,8 @@ namespace App;
 
 use App\User;
 use App\Reply;
+use App\Thread;
+use App\Channel;
 use Illuminate\Database\Eloquent\Model;
 
 class Thread extends Model
@@ -14,7 +16,7 @@ class Thread extends Model
      * @var array
      */
     protected $fillable = [
-        'user_id', 'title', 'body',
+        'user_id', 'title', 'body', 'channel_id'
     ];
 
     /**
@@ -47,5 +49,13 @@ class Thread extends Model
     public function addReply($reply)
     {
         $this->replies()->create($reply);
+    }
+
+    /**
+     * Get the channel for this sthread
+     */
+    public function channel()
+    {
+        return $this->belongsTo(Channel::class);
     }
 }
