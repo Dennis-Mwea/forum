@@ -11,6 +11,13 @@ class ReadThreadsTest extends TestCase
 {
     use DatabaseMigrations;
 
+    /**
+     * Thread variable
+     *
+     * @var object
+     */
+    protected $thread;
+
     public function setUp(): void
     {
         parent::setUp();
