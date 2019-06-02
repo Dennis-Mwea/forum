@@ -2,10 +2,6 @@
 
 namespace App;
 
-use App\User;
-use App\Reply;
-use App\Thread;
-use App\Channel;
 use Illuminate\Database\Eloquent\Model;
 
 class Thread extends Model

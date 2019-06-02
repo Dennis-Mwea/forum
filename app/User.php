@@ -2,9 +2,8 @@
 
 namespace App;
 
-use App\Thread;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
@@ -41,10 +40,18 @@ class User extends Authenticatable
     /**
      * Get all threads that belong to a user
      *
-     * @return Model
+     * @return HasMany
      */
     public function threads()
     {
         return $this->hasMany(Thread::class);
+    }
+
+    /**
+     * @return string
+     */
+    public function getRouteKeyName()
+    {
+        return 'name';
     }
 }

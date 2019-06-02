@@ -2,7 +2,6 @@
 
 namespace App;
 
-use App\Channel;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
