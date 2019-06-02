@@ -19,8 +19,9 @@ class ReadThreadsTest extends TestCase
     }
 
     /**
-     * @test
-     */
+      * Test whether a user can view all threads
+      * @test
+      */
     public function aUserCanViewAllThreads()
     {
         $this->get('/threads')
@@ -29,6 +30,7 @@ class ReadThreadsTest extends TestCase
     }
 
     /**
+     * Test whether a user can view a single thread
      * @test
      */
     public function aUserCanReadASingleThread()
@@ -39,6 +41,7 @@ class ReadThreadsTest extends TestCase
     }
 
     /**
+     * Test whether a user can view replies associated with a single thread
      * @test
      */
     public function aUserCanReadThreadsAssociatedWithAThread()
