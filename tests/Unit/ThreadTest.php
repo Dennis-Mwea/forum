@@ -13,14 +13,25 @@ class ThreadTest extends TestCase
     use DatabaseMigrations;
 
     /**
+     * Thread variable
+     *
+     * @var object
+     */
+    protected $thread;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        $this->thread = factory(Thread::class)->create();
+    }
+    /**
      * Test that a thread has a creator
      * @test
      */
     public function aThreadHasACreator()
     {
-        $thread = factory(Thread::class)->create();
-
-        $this->assertInstanceOf(User::class, $thread->user);
+        $this->assertInstanceOf(User::class, $this->thread->user);
     }
 
     /**
@@ -29,8 +40,20 @@ class ThreadTest extends TestCase
      */
     public function aThreadHasReplies()
     {
-        $thread = factory(Thread::class)->create();
+        $this->assertInstanceOf(Collection::class, $this->thread->replies);
+    }
 
-        $this->assertInstanceOf(Collection::class, $thread->replies);
+    /**
+     * Test whether a thread can add a reply
+     * @test
+     */
+    public function aThreadCanAddAReply()
+    {
+        $this->thread->addReply([
+            'body' => 'Foobar',
+            'user_id' => 1,
+        ]);
+
+        $this->assertCount(1, $this->thread->replies);
     }
 }

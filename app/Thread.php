@@ -40,4 +40,12 @@ class Thread extends Model
     {
         return '/threads/' . $this->id;
     }
+
+    /**
+     * Save a reply for this thread
+     */
+    public function addReply($reply)
+    {
+        $this->replies()->create($reply);
+    }
 }
