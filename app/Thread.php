@@ -4,6 +4,10 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Class Thread
+ * @package App
+ */
 class Thread extends Model
 {
     /**
@@ -53,5 +57,17 @@ class Thread extends Model
     public function channel()
     {
         return $this->belongsTo(Channel::class);
+    }
+
+    /**
+     * Get querry filters and apply them to filter threads
+     *
+     * @param $query
+     * @param $filters
+     * @return mixed
+     */
+    public function scopeFilter($query, $filters)
+    {
+        return $filters->apply($query);
     }
 }
