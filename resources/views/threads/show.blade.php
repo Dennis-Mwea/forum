@@ -2,8 +2,8 @@
 
 @section('content')
 <div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-10">
+    <div class="row">
+        <div class="col-md-8">
             <div class="card">
                 <div class="card-header">
                     <a href="#">{{ $thread->user->name }}</a> posted:
@@ -18,20 +18,14 @@
                     </article>
                 </div>
             </div>
-        </div>
-    </div>
 
-    <div class="row justify-content-center">
-        <div class="col-md-10">
-            @foreach ($thread->replies as $reply)
+            @foreach ($replies as $reply)
                 @include('threads.replies')
             @endforeach
-        </div>
-    </div>
 
-    @if (auth()->check())
-        <div class="row justify-content-center replies">
-            <div class="col-md-10">
+            {{ $replies->links() }}
+
+            @if (auth()->check())
                 <form action="{{ $thread->path() . '/replies' }}" method="post">
                     @csrf
                     <div class="form-group">
@@ -43,10 +37,25 @@
                         <button type="submit" class="btn btn-primary">Reply</button>
                     </div>
                 </form>
+            @else
+                <p class="text-center">Please <a href="{{ route('login') }}">sign in</a> to participate in this discussion.</p>
+            @endif
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <article>
+                        <div class="body">
+                            <p>
+                                This thread was published {{ $thread->created_at->diffForHumans() }}
+                                by <a href="#">{{ $thread->user->name }}</a> and currently has {{ $thread->replies_count }} {{ str_plural('reply', $thread->replies_count) }}.
+                            </p>
+                        </div>
+                    </article>
+                </div>
             </div>
         </div>
-    @else
-        <p class="text-center">Please <a href="{{ route('login') }}">sign in</a> to participate in this discussion.</p>
-    @endif
+    </div>
 </div>
 @endsection
