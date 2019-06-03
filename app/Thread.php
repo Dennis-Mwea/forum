@@ -2,6 +2,7 @@
 
 namespace App;
 
+use function foo\func;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -18,6 +19,15 @@ class Thread extends Model
     protected $fillable = [
         'user_id', 'title', 'body', 'channel_id'
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::addGlobalScope('replyCount', function ($builder) {
+            $builder->withCount('replies');
+        });
+    }
 
     /**
      * Get a user that created a thread
