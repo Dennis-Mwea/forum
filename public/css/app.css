@@ -10666,3 +10666,16 @@ a.text-dark:focus {
   margin-top: 1rem;
 }
 
+body {
+  padding-bottom: 100px;
+}
+
+.level {
+  display: flex;
+  align-items: center;
+}
+
+.level .flex {
+  flex: 1;
+}
+
