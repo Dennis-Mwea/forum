@@ -59,4 +59,14 @@ class Reply extends Model
             return $this->favorites()->create($attributes);
         }
     }
+
+    /**
+     * Check whether a reply is favorited or not
+     *
+     * @return bool
+     */
+    public function isFavorited()
+    {
+        return $this->favorites()->where('user_id', auth()->id())->exists();
+    }
 }
