@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Reply;
 use App\Thread;
 use App\User;
 use Tests\TestCase;
@@ -88,5 +89,23 @@ class ReadThreadsTest extends TestCase
         $this->get('/threads?by=' . auth()->user()->name)
             ->assertSee($threadByDennis->title)
             ->assertDontSee($threadNotByDennis->title);
+    }
+
+    /**
+     * Test whether a user can filter threads by popularity
+     * @test
+     */
+    public function aUserCanFilterThreadsByPopularity()
+    {
+        $threadWith3Replies = create(Thread::class);
+        create(Reply::class,['thread_id' => $threadWith3Replies->id], 3);
+
+        $threadWith2Replies = create(Thread::class);
+        create(Reply::class, ['thread_id' => $threadWith2Replies->id], 2);
+
+        $threadwithNoReply = $this->thread;
+
+        $response = $this->getJson('/threads?popular=1')->json();
+        $this->assertEquals([3, 2, 0], array_column($response, 'replies_count'));
     }
 }

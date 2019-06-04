@@ -43,6 +43,8 @@
                                 @if (Auth::check())
                                     <a class="nav-link" href="/threads?by={{ auth()->user()->name }}">My Threads</a>
                                 @endif
+
+                                <a class="nav-link" href="/threads?popular=1">Popular Threads</a>
                             </div>
                         </li>
 
