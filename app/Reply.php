@@ -5,7 +5,12 @@ namespace App;
 use App\User;
 use App\Thread;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
+/**
+ * Class Reply
+ * @package App
+ */
 class Reply extends Model
 {
     /**
@@ -31,5 +36,27 @@ class Reply extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Return the favorited replies
+     *
+     * @return MorphMany
+     */
+    public function favorites()
+    {
+        return $this->morphMany(Favorite::class, 'favorited');
+    }
+
+    /**
+     * Favorite a reply
+     */
+    public function favorite($userId)
+    {
+        $attributes = ['user_id' => $userId];
+
+        if (!$this->favorites()->where($attributes)->exists()) {
+            return $this->favorites()->create($attributes);
+        }
     }
 }
