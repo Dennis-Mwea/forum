@@ -6,6 +6,7 @@ use App\User;
 use App\Thread;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use App\Traits\Favoritable;
 
 /**
  * Class Reply
@@ -13,6 +14,8 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
  */
 class Reply extends Model
 {
+    use Favoritable;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -21,6 +24,13 @@ class Reply extends Model
     protected $fillable = [
         'user_id', 'thread_id', 'body'
     ];
+
+    /**
+     * The relations to eager load on every query.
+     *
+     * @var array
+     */
+    protected $with = ['user', 'favorites'];
 
     /**
      * Get a thread for this reply
@@ -36,37 +46,5 @@ class Reply extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
-    }
-
-    /**
-     * Return the favorited replies
-     *
-     * @return MorphMany
-     */
-    public function favorites()
-    {
-        return $this->morphMany(Favorite::class, 'favorited');
-    }
-
-    /**
-     * Favorite a reply
-     */
-    public function favorite($userId)
-    {
-        $attributes = ['user_id' => $userId];
-
-        if (!$this->favorites()->where($attributes)->exists()) {
-            return $this->favorites()->create($attributes);
-        }
-    }
-
-    /**
-     * Check whether a reply is favorited or not
-     *
-     * @return bool
-     */
-    public function isFavorited()
-    {
-        return $this->favorites()->where('user_id', auth()->id())->exists();
     }
 }
