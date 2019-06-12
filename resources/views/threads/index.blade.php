@@ -4,35 +4,32 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            <div class="card">
-                <div class="card-header">Forum Threads</div>
+            @foreach ($threads as $thread)
+                <div class="card replies">
+                    <div class="card-header">
+                        <div class="level">
+                            <h4 class="flex">
+                                <a href="{{ $thread->path() }}">{{ $thread->title }}</a>
+                            </h4>
 
-                <div class="card-body">
-                    @if (session('status'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
+                            <a href="{{ $thread->path() }}">
+                                <strong>{{ $thread->replies_count }} {{  str_plural('reply', $thread->replies_count) }}</strong>
+                            </a>
                         </div>
-                    @endif
+                    </div>
 
-                    @foreach ($threads as $thread)
-                        <article>
-                            <div class="level">
-                                <h4 class="flex">
-                                    <a href="{{ $thread->path() }}">{{ $thread->title }}</a>
-                                </h4>
-
-                                <a href="{{ $thread->path() }}">
-                                    <strong>{{ $thread->replies_count }} {{  str_plural('reply', $thread->replies_count) }}</strong>
-                                </a>
+                    <div class="card-body">
+                        @if (session('status'))
+                            <div class="alert alert-success" role="alert">
+                                {{ session('status') }}
                             </div>
-                            <div class="body">
-                                {{ $thread->body }}
-                            </div>
-                        </article>
-                        <hr>
-                    @endforeach
+                        @endif
+                        <div class="body">
+                            {{ $thread->body }}
+                        </div>
+                    </div>
                 </div>
-            </div>
+            @endforeach
         </div>
     </div>
 </div>
