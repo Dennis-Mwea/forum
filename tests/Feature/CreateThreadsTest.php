@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Reply;
 use App\Thread;
 use App\Channel;
 use Tests\TestCase;
@@ -21,7 +22,7 @@ class CreateThreadsTest extends TestCase
             ->post('/threads', [])
             ->assertRedirect('/login');
     }
-    
+
     /**
      * Test whether authenticated users can create threads
      * @test
@@ -71,6 +72,38 @@ class CreateThreadsTest extends TestCase
             ->assertSessionHasErrors('channel_id');
         $this->publishThread(['channel_id' => 999])
             ->assertSessionHasErrors('channel_id');
+    }
+
+    /**
+     * Test whether a thread can be deleted
+     * @test
+     */
+    public function guestsCannotBeDeleteThreads()
+    {
+        $this->withExceptionHandling();
+        
+        $thread = create(Thread::class);
+
+        $response = $this->delete($thread->path());
+
+        $response->assertRedirect('/login');
+    }
+
+    /**
+     * Test whether a thread can be deleted
+     * @test
+     */
+    public function aThreadCanBeDeleted()
+    {
+        $this->signIn();
+        $thread = create(Thread::class);
+        $reply = create(Reply::class, ['thread_id' => $thread->id]);
+
+        $response = $this->json('DELETE', $thread->path());
+        $response->assertStatus(204);
+
+        $this->assertDatabaseMissing('threads', ['id' => $thread->id]);
+        $this->assertDatabaseMissing('replies', ['id' => $reply->id]);
     }
 
     public function publishThread($overrides = [])
