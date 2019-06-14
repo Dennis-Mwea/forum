@@ -4,9 +4,10 @@ namespace App;
 
 use App\User;
 use App\Thread;
+use App\Traits\Favoritable;
+use App\Traits\RecordsActivity;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
-use App\Traits\Favoritable;
 
 /**
  * Class Reply
@@ -14,7 +15,7 @@ use App\Traits\Favoritable;
  */
 class Reply extends Model
 {
-    use Favoritable;
+    use Favoritable, RecordsActivity;
 
     /**
      * The attributes that are mass assignable.
