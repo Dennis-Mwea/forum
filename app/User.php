@@ -2,8 +2,9 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Activity;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
@@ -53,5 +54,15 @@ class User extends Authenticatable
     public function getRouteKeyName()
     {
         return 'name';
+    }
+    
+    /**
+     * Get activities for the user
+     *
+     * @return HasMany
+     */
+    public function activity()
+    {
+        return $this->hasMany(Activity::class);
     }
 }

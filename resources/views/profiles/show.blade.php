@@ -11,30 +11,15 @@
                 </h1>
             </div>
 
-            @foreach ($threads as $thread)
-                <div class="card">
-                    <div class="card-header">
-                        <div class="level">
-                            <span class="flex">
-                                <a href="/profiles/{{ $thread->user->name }}">{{ $profileUser->name }}</a> posted:
-                                {{ $thread->title }}
-                            </span>
-                            <span>
-                                {{ $thread->created_at->diffForHumans() }}
-                            </span>
-                        </div>
-                    </div>
-
-                    <div class="card-body">
-                        <article>
-                            <div class="body">
-                                {{ $thread->body }}
-                            </div>
-                        </article>
-                    </div>
+            @foreach ($activities as $date => $activity)
+                <div class="pb-2 mt-4 mb-2 border-bottom">
+                    <h3>{{ $date }}</h3>
                 </div>
+                @foreach ($activity as $record)
+                    @include("profiles.activities.{$record->type}", ['activity' => $record])
+                @endforeach
             @endforeach
-            {{ $threads->links() }}
+            {{-- {{ $threads->links() }} --}}
         </div>
     </div>
 </div>
