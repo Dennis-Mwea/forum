@@ -1,0 +1,23 @@
+if: type = pull_request
+language: php
+dist: bionic
+
+php:
+- 7.3
+
+services:
+  - mysql
+
+before_script:
+- cp .env.travis .env
+- mysql -e 'create database xinecto;'
+- mysql -e "CREATE USER 'xinecto'@'localhost' IDENTIFIED BY 'test';"
+- mysql -e "GRANT ALL PRIVILEGES ON * . * TO 'xinecto'@'localhost';"
+- mysql -e 'FLUSH PRIVILEGES;'
+- composer self-update
+- composer install --no-interaction
+- php artisan key:generate
+- php artisan migrate
+
+script:
+- php vendor/bin/phpunit
