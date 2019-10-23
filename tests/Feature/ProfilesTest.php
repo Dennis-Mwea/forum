@@ -19,7 +19,8 @@ class ProfilesTest extends TestCase
     {
         $user = create(User::class);
 
-        $this->get("/profiles/{$user->name}")
+        $this->withoutMiddleware(VerifyCsrfToken::class)
+            ->get("/profiles/{$user->name}")
             ->assertSee($user->name);
     }
 
@@ -29,10 +30,11 @@ class ProfilesTest extends TestCase
      */
     public function profilesDisplayAllThreadsCreatedByTheAssociatedUser()
     {
-        $user = create(User::class);
+        $this->signIn($user = create(User::class));
         $thread = create(Thread::class, ['user_id' => $user->id]);
 
-        $this->get("/profiles/{$user->name}")
+        $this->withoutMiddleware(VerifyCsrfToken::class)
+            ->get("/profiles/{$user->name}")
             ->assertSee($thread->title)
             ->assertSee($thread->body);
     }
