@@ -98,7 +98,7 @@ class ReadThreadsTest extends TestCase
     public function aUserCanFilterThreadsByPopularity()
     {
         $threadWith3Replies = create(Thread::class);
-        create(Reply::class,['thread_id' => $threadWith3Replies->id], 3);
+        create(Reply::class, ['thread_id' => $threadWith3Replies->id], 3);
 
         $threadWith2Replies = create(Thread::class);
         create(Reply::class, ['thread_id' => $threadWith2Replies->id], 2);
