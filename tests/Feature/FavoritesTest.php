@@ -3,8 +3,9 @@
 namespace Tests\Feature;
 
 use App\Reply;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\TestCase;
+use App\Http\Middleware\VerifyCsrfToken;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class FavoritesTest extends TestCase
 {
@@ -30,7 +31,8 @@ class FavoritesTest extends TestCase
      */
     public function unauthenticatedUsersMayNotFavoriteReplies()
     {
-        $this->withExceptionHandling()
+        $this->withoutMiddleware(VerifyCsrfToken::class)
+            ->withExceptionHandling()
             ->post('/replies/' . $this->reply->id . '/favorites', [])
             ->assertRedirect('/login');
     }
@@ -43,7 +45,8 @@ class FavoritesTest extends TestCase
     {
         $this->signIn();
 
-        $this->post('/replies/' . $this->reply->id . '/favorites');
+        $this->withoutMiddleware(VerifyCsrfToken::class)
+            ->post('/replies/' . $this->reply->id . '/favorites');
 
         $this->assertCount(1, $this->reply->favorites);
     }
@@ -57,8 +60,10 @@ class FavoritesTest extends TestCase
         $this->signIn();
 
         try {
-            $this->post('/replies/' . $this->reply->id . '/favorites');
-            $this->post('/replies/' . $this->reply->id . '/favorites');
+            $this->withoutMiddleware(VerifyCsrfToken::class)
+                ->post('/replies/' . $this->reply->id . '/favorites');
+            $this->withoutMiddleware(VerifyCsrfToken::class)
+                ->post('/replies/' . $this->reply->id . '/favorites');
         } catch (\Exception $e) {
             $this->fail('Did not expect to insert the same record twice.');
         }

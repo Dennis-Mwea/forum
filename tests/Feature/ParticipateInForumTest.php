@@ -6,6 +6,7 @@ use App\User;
 use App\Reply;
 use App\Thread;
 use Tests\TestCase;
+use App\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class ParticipateInForumTest extends TestCase
@@ -32,7 +33,8 @@ class ParticipateInForumTest extends TestCase
      */
     public function unauthenticatedUsersMayNotParticipateInTheForum()
     {
-        $this->withExceptionHandling()
+        $this->withoutMiddleware(VerifyCsrfToken::class)
+            ->withExceptionHandling()
             ->post($this->thread->path() . '/replies', [])
             ->assertRedirect('/login');
     }
@@ -47,7 +49,8 @@ class ParticipateInForumTest extends TestCase
 
         $reply = make(Reply::class);
 
-        $this->post($this->thread->path() . '/replies', $reply->toArray());
+        $this->withoutMiddleware(VerifyCsrfToken::class)
+            ->post($this->thread->path() . '/replies', $reply->toArray());
 
         $this->get($this->thread->path())
             ->assertSee($reply->body);
@@ -63,7 +66,8 @@ class ParticipateInForumTest extends TestCase
 
         $reply = make(Reply::class, ['body' => null]);
 
-        $this->post($this->thread->path() . '/replies', $reply->toArray())
+        $this->withoutMiddleware(VerifyCsrfToken::class)
+            ->post($this->thread->path() . '/replies', $reply->toArray())
             ->assertSessionHasErrors('body');
     }
 }

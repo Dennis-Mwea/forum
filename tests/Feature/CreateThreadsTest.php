@@ -6,6 +6,7 @@ use App\Reply;
 use App\Thread;
 use App\Channel;
 use Tests\TestCase;
+use App\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class CreateThreadsTest extends TestCase
@@ -18,7 +19,8 @@ class CreateThreadsTest extends TestCase
      */
     public function unAuthenticatedUsersCannotCreateNewThreads()
     {
-        $this->withExceptionHandling()
+        $this->withoutMiddleware(VerifyCsrfToken::class)
+            ->withExceptionHandling()
             ->post('/threads', [])
             ->assertRedirect('/login');
     }
@@ -33,7 +35,8 @@ class CreateThreadsTest extends TestCase
 
         $thread = make(Thread::class);
 
-        $response = $this->post('/threads', $thread->toArray());
+        $response = $this->withoutMiddleware(VerifyCsrfToken::class)
+            ->post('/threads', $thread->toArray());
 
         $this->get($response->headers->get('Location'))
             ->assertSee($thread->title)
@@ -46,7 +49,8 @@ class CreateThreadsTest extends TestCase
      */
     public function aThreadRequiresATitle()
     {
-        $this->publishThread(['title' => null])
+        $this->withoutMiddleware(VerifyCsrfToken::class)
+            ->publishThread(['title' => null])
             ->assertSessionHasErrors('title');
     }
 
@@ -56,7 +60,8 @@ class CreateThreadsTest extends TestCase
      */
     public function aThreadRequiresABody()
     {
-        $this->publishThread(['body' => null])
+        $this->withoutMiddleware(VerifyCsrfToken::class)
+            ->publishThread(['body' => null])
             ->assertSessionHasErrors('body');
     }
 
@@ -68,9 +73,11 @@ class CreateThreadsTest extends TestCase
     {
         factory(Channel::class, 2)->create();
 
-        $this->publishThread(['channel_id' => null])
+        $this->withoutMiddleware(VerifyCsrfToken::class)
+            ->publishThread(['channel_id' => null])
             ->assertSessionHasErrors('channel_id');
-        $this->publishThread(['channel_id' => 999])
+        $this->withoutMiddleware(VerifyCsrfToken::class)
+            ->publishThread(['channel_id' => 999])
             ->assertSessionHasErrors('channel_id');
     }
 
@@ -84,11 +91,13 @@ class CreateThreadsTest extends TestCase
         
         $thread = create(Thread::class);
 
-        $this->delete($thread->path())
+        $this->withoutMiddleware(VerifyCsrfToken::class)
+            ->delete($thread->path())
             ->assertRedirect('/login');
 
         $this->signIn();
-        $this->delete($thread->path())
+        $this->withoutMiddleware(VerifyCsrfToken::class)
+            ->delete($thread->path())
             ->assertStatus(403);
     }
 
@@ -103,7 +112,8 @@ class CreateThreadsTest extends TestCase
         $thread = create(Thread::class, ['user_id' => auth()->id()]);
         $reply = create(Reply::class, ['thread_id' => $thread->id]);
 
-        $response = $this->json('DELETE', $thread->path());
+        $response = $this->withoutMiddleware(VerifyCsrfToken::class)
+            ->json('DELETE', $thread->path());
         $response->assertStatus(204);
 
         $this->assertDatabaseMissing('threads', ['id' => $thread->id]);
