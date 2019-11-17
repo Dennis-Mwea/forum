@@ -22,6 +22,10 @@ trait RecordsActivity
                 $model->recordActivity($event);
             });
         }
+
+        static::deleting(function ($model) {
+            $model->activity()->delete();
+        });
     }
     /**
      * Add a record to the activities table when a thread is created to record the activity

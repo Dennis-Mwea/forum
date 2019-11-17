@@ -2,8 +2,6 @@
 
 namespace App;
 
-use App\Activity;
-use function foo\func;
 use App\Traits\RecordsActivity;
 use Illuminate\Database\Eloquent\Model;
 
@@ -14,7 +12,7 @@ use Illuminate\Database\Eloquent\Model;
 class Thread extends Model
 {
     use RecordsActivity;
-    
+
     /**
      * The attributes that are mass assignable.
      *
@@ -33,7 +31,7 @@ class Thread extends Model
         });
 
         static::deleting(function ($thread) {
-            $thread->replies()->delete();
+            $thread->replies->each->delete();
         });
     }
 
