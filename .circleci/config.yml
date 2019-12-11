@@ -32,9 +32,6 @@ jobs:
       - run: sudo apt update
       - run: sudo apt upgrade -y
       - run: sudo apt install apache2 nodejs libpng-dev wget libsqlite3-dev libzip-dev libnss3 libgconf-2-4 libfontconfig1 xvfb -y
-      # install google chrome driver to run dusk tests
-      - run: wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-      - run: sudo dpkg -i google-chrome-stable_current_amd64.deb
       - run: sudo apt install -f
       - run: sudo docker-php-ext-configure pdo_mysql --with-pdo-mysql=mysqlnd
       - run: sudo docker-php-ext-install zip gd mbstring mysqli pdo pdo_mysql bcmath
@@ -78,9 +75,6 @@ jobs:
       - run: php artisan config:clear
       - run: php artisan cache:clear
 
-      # install chromium web driver
-      - run: php artisan dusk:install
-
       # prepare the database
       - run: php artisan migrate
 
@@ -91,16 +85,6 @@ jobs:
       - run: ./vendor/bin/phpunit --testsuite Unit
       - run: ./vendor/bin/phpunit --testsuite Feature
 
-       # Run Laravel Dusk tests
-      - run:
-            name: Start xvfb
-            background: true
-            command: /usr/bin/Xvfb :0 -screen 0 1280x720x24
-      - run:
-            name: Open Browsers
-            background: true
-            command: DISPLAY=:0 ./vendor/laravel/dusk/bin/chromedriver-linux
-
       - run:
             name: Docker Host
             command: echo 127.0.0.1 my.site | sudo tee -a /etc/hosts
@@ -109,6 +93,3 @@ jobs:
             name: Serve Application
             command: sudo php artisan serve --host=my.site --port=8000
             background: true
-      - run:
-            name: Run Laravel Dusk Login test
-            command: php artisan dusk
