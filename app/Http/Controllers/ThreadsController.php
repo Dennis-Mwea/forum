@@ -2,14 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Filters\ThreadsFilter;
 use App\Thread;
 use App\Channel;
-use App\User;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use App\Filters\ThreadsFilter;
 use Illuminate\Validation\ValidationException;
 
 class ThreadsController extends Controller
@@ -33,6 +30,7 @@ class ThreadsController extends Controller
         if (request()->wantsJson()) {
             return $threads;
         }
+        request()->session()->flash('flash', 'Your thread has been publised.');
 
         return view('threads.index', compact('threads'));
     }
@@ -69,7 +67,8 @@ class ThreadsController extends Controller
             'body' => $request->body,
         ]);
 
-        return redirect($thread->path());
+        return redirect($thread->path())
+            ->with('flash', 'Your thread has been published!');
     }
 
     /**

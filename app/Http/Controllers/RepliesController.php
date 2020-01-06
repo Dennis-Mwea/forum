@@ -25,12 +25,13 @@ class RepliesController extends Controller
         $this->validate(request(), [
             'body' => 'required'
         ]);
-        
+
         $thread->addReply([
             'body' => request()->body,
             'user_id' => auth()->id(),
         ]);
 
-        return back();
+        return back()
+            ->with('flash', 'Your reply has been left!');
     }
 }
